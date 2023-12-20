@@ -24,7 +24,7 @@ def save_to_csv(matrix, filename):
         writer.writerows(matrix)
 
 # Parameters
-n = 10**5
+n = 10**6
 m_p = 8
 m_r = 10
 c = 10
