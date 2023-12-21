@@ -2,11 +2,13 @@ import pandas as pd
 import numpy as np
 from tqdm import tqdm
 import collections
+import scipy.stats as stats
 
 import cupy as cp # GPUを使用する場合，cupyが必要
+# import cupyx.scipy.stats as cp_stats
 ''' 
 実行時間の目安
-GPUあり: 8 分
+GPUあり: 20 分
 GPUなし: 4 時間
 '''
 
@@ -43,8 +45,7 @@ def hamm_attack(h_min=0, gpu_use=False):
             while True:
                 can = candidates_gpu(h, cp_o_p_i, cp_b_p)
                 if len(can) != 0:
-                    idx = np.random.randint(0, len(can)) 
-                    can_index.append(can[idx])
+                    can_index.append(can)
                     ham.append(h)
                     break
                 h += 1
@@ -54,8 +55,7 @@ def hamm_attack(h_min=0, gpu_use=False):
             while True:
                 can = candidates(h, np_o_p_i, np_b_p)
                 if len(can) != 0:
-                    idx = np.random.randint(0, len(can)) 
-                    can_index.append(can[idx])
+                    can_index.append(can)
                     ham.append(h)
                     break
                 h += 1
@@ -68,11 +68,16 @@ def hamm_attack(h_min=0, gpu_use=False):
     if gpu_use:
         cp_b_r = cp.asarray(np_b_r)
 
-    # 秘密推定データを格納
+    ans = [] # 秘密推定データを格納
     if gpu_use:
-        np_ans = cp_b_r[can_index].get()
+        for idx_list in tqdm(can_index):
+            mode_val, mode_num = stats.mode(cp_b_r[idx_list].get(), axis=0)
+            ans.append(mode_val)
     else:
-        np_ans = np_b_r[can_index]
+        for idx_list in tqdm(can_index):
+            mode_val, mode_num = stats.mode(np_b_r[idx_list], axis=0)
+            ans.append(mode_val)
+    np_ans = np.array(ans)
     df_ans = pd.DataFrame(np_ans)
 
     # 安全性評価
