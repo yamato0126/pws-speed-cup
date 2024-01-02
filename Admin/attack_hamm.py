@@ -13,13 +13,13 @@ GPUなし: 4 時間
 from common import calculate_differing_rate, candidates, candidates_gpu
 
 
-def hamm_attack(h_min=0, gpu_use=False):
+def hamm_attack(h_min=0, gpu_use=False, team=None):
     # パラメータ
     m_p = 8 # 公開部の列数
 
     # ファイルのパス
     path_o = '../Docker/src/o.csv'
-    path_b = '../Docker/src/b.csv'
+    path_b = f'../Docker/src/b{team}.csv'
 
     # 元データ読み込み
     df_o = pd.read_csv(path_o, sep=',', header=None).astype(int)
@@ -81,14 +81,18 @@ def hamm_attack(h_min=0, gpu_use=False):
 
     differing_rate = calculate_differing_rate(df_ans, df_o_r)
     print(f"safety:{differing_rate}")
-    with open('../Docker/src/safe.txt', 'w') as f:
+    with open(f'../Docker/src/safe{team}.txt', 'a') as f:
+        print(h_min, file=f)
         print(differing_rate, file=f)
 
 
 def main():
     gpu_use = True # GPUを使用するか
-    h_min = 0 # ハミング距離の最小値
-    hamm_attack(h_min, gpu_use)
+    team_list = ['_miura_1', '_miura_2', '_miura_3', '_sugiura', '_tejima_1', '_tejima_2', '_base_st', '_base_ut']
+    h_min_list = [3, 3, 3, 1, 3, 3, 3, 0]
+    for team, h_min in zip(team_list, h_min_list):
+        for i in range(h_min+1):
+            hamm_attack(i, gpu_use, team)
 
 
 if __name__ == '__main__':

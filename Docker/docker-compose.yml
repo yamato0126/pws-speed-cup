@@ -1,0 +1,7 @@
+version: '3'
+services:
+  timekeeper:
+    build: .
+    container_name: timekeeper
+    volumes:
+      - ./src:/src
