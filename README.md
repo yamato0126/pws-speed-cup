@@ -1,4 +1,4 @@
-## 処理時間を考慮に入れた匿名化コンテストの提案（情報処理学会 第86回全国大会）
+# 処理時間を考慮に入れた匿名化コンテストの提案（情報処理学会 第86回全国大会）
 Title: Proposal for an anonymization contest considering processing time
 
 ## 主催者が行う評価の手順
@@ -13,3 +13,7 @@ Title: Proposal for an anonymization contest considering processing time
 - 公開部の列数 m_p = 8
 - 秘密部の列数 m_r = 10
 - データの各要素 (0以上c未満の整数) c = 10
+
+## 関連リンク
+- [PWSCUP 2023](https://www.iwsec.org/pws/2023/cup23.html)
+- [PWSCUP 2023 チームF.SE リポジトリ](https://github.com/fseclab-osaka/pwscup2023-public)
